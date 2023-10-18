@@ -1,0 +1,53 @@
+#include <iostream>
+#include <fstream>
+#include <chrono>
+#include <vector>
+using namespace std;
+using namespace std::chrono;
+
+int Partition(vector<int> &v, int start, int end){
+
+    int pivot = end;
+    int j = start;
+    for(int i=start;i<end;++i){
+        if(v[i]<v[pivot]){
+            swap(v[i],v[j]);
+            ++j;
+        }
+    }
+    swap(v[j],v[pivot]);
+    return j;
+
+}
+
+void Quicksort(vector<int> &v, int start, int end ){
+
+    if(start<end){
+        int p = Partition(v,start,end);
+        Quicksort(v,start,p-1);
+        Quicksort(v,p+1,end);
+    }
+
+}
+
+int main(int ac, char **ag) {
+    ifstream f;
+    f.open(ag[1]);
+    int n;
+    f >> n;
+    vector<int> v1(n);
+    for (int i = 0; i < n; i++){
+        f >> v1[i];
+    }
+    auto start = high_resolution_clock::now();
+    Quicksort(v1, 0, v1.size() - 1);
+    auto end = high_resolution_clock::now();
+    for (int x : v1){
+        cout << x << " ";
+    }
+    cout << "\n";
+    f.close();
+    auto duration = duration_cast<microseconds>(end - start);
+    cout << "Duration: " << duration.count();
+    return 0;
+}
